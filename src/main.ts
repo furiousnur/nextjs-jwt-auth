@@ -5,15 +5,21 @@ import {NestExpressApplication} from "@nestjs/platform-express";
 import * as dotenv from 'dotenv';
 
 async function bootstrap() {
-  // const app = await NestFactory.create(AppModule);
   dotenv.config();
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  app.enableCors();
+  // Enable CORS with specific configuration
+  app.enableCors({
+    origin: 'http://localhost:5173', 
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  });
   app.useGlobalPipes(new ValidationPipe({
     transform: true,
     whitelist: true,
     forbidNonWhitelisted: true,
     validationError: { target: false, value: false },
-  })); 
+  }));
   await app.listen(3000);
 }
 bootstrap();

@@ -4,7 +4,6 @@ import {AuthService} from "../../services/auth/auth.service";
 import {UserDto} from "../../dtos/user.dto";
 import {AuthDto} from "../../dtos/auth.dto"; 
 import {LocalGuards} from "../../guards/local.guards";
-import {AuthGuard} from "@nestjs/passport";
 import {JwtAuthGuards} from "../../guards/jwt.guards";
 
 @Controller('auth')
