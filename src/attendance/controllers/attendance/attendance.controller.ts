@@ -1,9 +1,11 @@
-import {BadRequestException, Body, Controller, HttpStatus, Post, Res} from '@nestjs/common';
+import {BadRequestException, Body, Controller, HttpStatus, Post, Res, UseGuards} from '@nestjs/common';
 import {AttendanceService} from "../../services/attendance/attendance.service";
 import {Response} from "express";
 import {AttendanceDto} from "../../dtos/attendance.dto";
+import {JwtAuthGuards} from "../../../auth/guards/jwt.guards";
 
 @Controller('attendance')
+@UseGuards(JwtAuthGuards)
 export class AttendanceController {
     constructor(private readonly attendanceService: AttendanceService) {}
 
