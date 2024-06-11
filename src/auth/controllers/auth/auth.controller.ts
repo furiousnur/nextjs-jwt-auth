@@ -39,4 +39,14 @@ export class AuthController {
             throw new BadRequestException(e.message);
         }
     }
+    
+    @Get('verify-token')
+    @UseGuards(JwtAuthGuards)
+    async verifyToken(@Req() req:Request){
+        try { 
+            return 'Success';
+        }catch (e){
+            throw new BadRequestException(e.message);
+        }
+    }
 }

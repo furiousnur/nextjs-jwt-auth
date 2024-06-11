@@ -1,4 +1,4 @@
-import {BadRequestException, Injectable} from '@nestjs/common';
+import {BadRequestException, Injectable, NotFoundException} from '@nestjs/common';
 import {InjectRepository} from "@nestjs/typeorm";
 import {Repository} from "typeorm";
 import {Attendance} from "../../../typeorm/entities/Attendance";
@@ -9,6 +9,14 @@ export class AttendanceService {
     constructor(
         @InjectRepository(Attendance) private attendanceRepository: Repository<Attendance>
     ) {}
+
+    public async getAttendance(){
+        const attendances = this.attendanceRepository.find();
+        if (!attendances) {
+            throw new NotFoundException('No attendance found');
+        }
+        return attendances;
+    }
 
     public async createAttendance(AttendanceDetails: AttendanceParams){
         try { 
