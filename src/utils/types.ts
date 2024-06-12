@@ -19,3 +19,11 @@ export type UserProfileParams = {
     department: string;
     profile_pic?: string;
 }
+
+export type LeaveParams = {
+    userId: number;
+    leave_type: string;
+    date_from: string;
+    date_to: string;  
+    reason: string;
+}
