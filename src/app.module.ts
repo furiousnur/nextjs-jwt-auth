@@ -6,6 +6,8 @@ import {TypeOrmModule} from "@nestjs/typeorm";
 import {User} from "./typeorm/entities/User";
 import { AttendanceModule } from './attendance/attendance.module';
 import {Attendance} from "./typeorm/entities/Attendance";
+import { UsersModule } from './users/users.module';
+import {Profile} from "./typeorm/entities/Profile";
 
 @Module({
   imports: [TypeOrmModule.forRoot({
@@ -15,9 +17,9 @@ import {Attendance} from "./typeorm/entities/Attendance";
     username:'root',
     password:'',
     database:'nestjs_jwt',
-    entities:[User, Attendance],
+    entities:[User, Attendance, Profile],
     synchronize:true
-  }),AuthModule, AttendanceModule],
+  }),AuthModule, AttendanceModule, UsersModule],
   controllers: [AppController],
   providers: [AppService],
 })

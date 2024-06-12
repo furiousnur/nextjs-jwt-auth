@@ -11,3 +11,11 @@ export type AttendanceParams = {
     time_out?: string;
     remark?: string;
 }
+
+export type UserProfileParams = {
+    name: string; 
+    dob: string;
+    position: string;
+    department: string;
+    profile_pic?: string;
+}

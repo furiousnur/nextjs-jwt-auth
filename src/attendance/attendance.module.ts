@@ -9,7 +9,7 @@ import {Attendance} from "../typeorm/entities/Attendance";
 
 @Module({
     imports: [
-        AuthModule,  // Import AuthModule to use its configurations
+        AuthModule, 
         PassportModule,
         JwtModule,
         TypeOrmModule.forFeature([Attendance]),
