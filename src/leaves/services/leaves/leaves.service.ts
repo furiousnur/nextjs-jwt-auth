@@ -29,4 +29,20 @@ export class LeavesService {
             throw new BadRequestException(e.message);
         }
     }
+    
+    public async acceptOrRejectLeave(status: string,id: number){ 
+        try {
+            const leave = await this.leaveRepository.findOne({ where: { id } });
+            if (!leave) {
+                throw new NotFoundException('Leave not found');
+            }
+           return await this.leaveRepository.save({
+                ...leave, 
+                status: status,
+                updatedAt: new Date(),
+            });  
+        } catch (e) {
+            throw new BadRequestException(e.message);
+        }
+    }
 }

@@ -1,4 +1,15 @@
-import {BadRequestException, Body, Controller, Get, HttpStatus, Post, Res, UseGuards} from '@nestjs/common'; 
+import {
+    BadRequestException,
+    Body,
+    Controller,
+    Get,
+    HttpStatus,
+    Param,
+    ParseIntPipe,
+    Post, 
+    Res,
+    UseGuards
+} from '@nestjs/common'; 
 import {Response} from "express";
 import {LeavesService} from "../../services/leaves/leaves.service";
 import {JwtAuthGuards} from "../../../auth/guards/jwt.guards";
@@ -28,6 +39,23 @@ export class LeavesController {
             const data = await this.leaveService.createLeave(leaveDto);
             return res.status(HttpStatus.OK).json({
                 message: 'Leave created successfully',
+                data,
+            });
+        } catch (e) {
+            throw new BadRequestException(e.message);
+        }
+    }
+
+    @Get('/:status/:id')
+    async getLeaveByStatus(
+        @Param('status') status: string,
+        @Param('id', ParseIntPipe) id: number,
+        @Res() res: Response
+    ) {
+        try {
+            const data = await this.leaveService.acceptOrRejectLeave(status,id);
+            return res.status(HttpStatus.OK).json({
+                message: 'Status updated successfully',
                 data,
             });
         } catch (e) {
