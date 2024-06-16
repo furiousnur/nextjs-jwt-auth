@@ -26,4 +26,5 @@ export type LeaveParams = {
     date_from: string;
     date_to: string;  
     reason: string;
+    totalLeave: number;
 }

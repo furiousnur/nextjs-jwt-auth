@@ -3,6 +3,7 @@ import {InjectRepository} from "@nestjs/typeorm";
 import {Repository} from "typeorm";
 import {LeaveParams} from "../../../utils/types";
 import {Leave} from "../../../typeorm/entities/Leave";
+import {User} from "../../../typeorm/entities/User";
 
 @Injectable()
 export class LeavesService {
@@ -10,21 +11,42 @@ export class LeavesService {
         @InjectRepository(Leave) private leaveRepository: Repository<Leave>
     ) {}
 
-    public async getLeave(){
-        const leaves = this.leaveRepository.find();
+    /*public async getLeave(){
+        const leaves = this.leaveRepository.find({relations: ['user']});
         if (!leaves) {
             throw new NotFoundException('No leave found');
         }
         return leaves;
+    }*/
+
+    public async getLeave(page: number = 1, limit: number = 10) {
+        const [leaves, total] = await this.leaveRepository.findAndCount({
+            relations: ['user'],
+            take: limit,
+            skip: (page - 1) * limit,
+        });
+
+        if (!leaves.length) {
+            throw new NotFoundException('No leave found');
+        }
+        const totalPages = Math.ceil(total / limit);
+        return {
+            leaves,
+            total,
+            page,
+            totalPages,
+            limit,
+        };
     }
 
-    public async createLeave(LeaveDetails: LeaveParams){
+    public async createLeave(LeaveDetails: LeaveParams) {
         try {
-            const newUser = this.leaveRepository.create({
+            const newLeave = this.leaveRepository.create({
                 ...LeaveDetails,
+                user: { id: LeaveDetails.userId } as User,
                 createdAt: new Date(),
             });
-            return this.leaveRepository.save(newUser);
+            return this.leaveRepository.save(newLeave);
         } catch (e) {
             throw new BadRequestException(e.message);
         }

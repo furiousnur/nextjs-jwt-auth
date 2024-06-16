@@ -34,7 +34,7 @@ export class LeavesController {
     }
 
     @Post('/create')
-    async createUser(@Body() leaveDto:LeaveDto,@Res() res: Response){
+    async createLeave(@Body() leaveDto:LeaveDto,@Res() res: Response){
         try {
             const data = await this.leaveService.createLeave(leaveDto);
             return res.status(HttpStatus.OK).json({

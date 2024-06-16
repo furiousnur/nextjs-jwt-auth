@@ -17,5 +17,6 @@ import { Profile } from '../typeorm/entities/Profile';
   ],
   controllers: [UsersController],
   providers: [UsersService],
+  exports: [UsersService],
 })
 export class UsersModule {}
