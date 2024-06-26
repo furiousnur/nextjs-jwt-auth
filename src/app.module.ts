@@ -10,6 +10,8 @@ import { UsersModule } from './users/users.module';
 import {Profile} from "./typeorm/entities/Profile";
 import { LeavesModule } from './leaves/leaves.module';
 import {Leave} from "./typeorm/entities/Leave";
+import { RolesModule } from './roles/roles.module';
+import {Role} from "./typeorm/entities/Role";
 
 @Module({
   imports: [TypeOrmModule.forRoot({
@@ -19,9 +21,9 @@ import {Leave} from "./typeorm/entities/Leave";
     username:'root',
     password:'',
     database:'nestjs_jwt',
-    entities:[User, Attendance, Profile, Leave],
+    entities:[User, Attendance, Profile, Leave, Role],
     synchronize:true
-  }),AuthModule, AttendanceModule, UsersModule, LeavesModule],
+  }),AuthModule, AttendanceModule, UsersModule, LeavesModule, RolesModule],
   controllers: [AppController],
   providers: [AppService],
 })

@@ -24,7 +24,7 @@ export class Profile {
     @Column({ nullable: true })
     profile_pic: string;
 
-    @Column({ default: 'pending' })
+    @Column({ default: 'Pending' })
     status: string;
 
     @Column()
