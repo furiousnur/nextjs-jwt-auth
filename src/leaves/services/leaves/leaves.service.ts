@@ -10,15 +10,7 @@ export class LeavesService {
     constructor(
         @InjectRepository(Leave) private leaveRepository: Repository<Leave>
     ) {}
-
-    /*public async getLeave(){
-        const leaves = this.leaveRepository.find({relations: ['user']});
-        if (!leaves) {
-            throw new NotFoundException('No leave found');
-        }
-        return leaves;
-    }*/
-
+    
     public async getLeave(page: number = 1, limit: number = 10) {
         const [leaves, total] = await this.leaveRepository.findAndCount({
             relations: ['user'],

@@ -12,6 +12,26 @@ export class UsersService {
         @InjectRepository(Profile) private readonly userProfileRepository: Repository<Profile>,
     ) {}
 
+    public async getUser(page: number = 1, limit: number = 10) {
+        const [users, total] = await this.authRepository.findAndCount({
+            relations: ['profile'],
+            take: limit,
+            skip: (page - 1) * limit,
+        });
+
+        if (!users.length) {
+            throw new NotFoundException('No user found');
+        }
+        const totalPages = Math.ceil(total / limit);
+        return {
+            users,
+            total,
+            page,
+            totalPages,
+            limit,
+        };
+    }
+    
     public async findUser(id: number) {
         const user = await this.authRepository.findOne({
             where: { id },
