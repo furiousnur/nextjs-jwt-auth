@@ -6,7 +6,6 @@ import {
     HttpStatus,
     Param,
     ParseIntPipe,
-    Post,
     Put,
     Res,
     UseGuards
