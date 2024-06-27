@@ -1,7 +1,7 @@
 import {
     BadRequestException,
     Body,
-    Controller,
+    Controller, Delete,
     Get,
     HttpStatus,
     Param,
@@ -46,7 +46,7 @@ export class RolesController {
     }
 
     @Get('/:id')
-    async findUser(@Param('id', ParseIntPipe) id: number, @Res() res: Response) {
+    async findRole(@Param('id', ParseIntPipe) id: number, @Res() res: Response) {
         try {
             const data = await this.roleService.findRole(id);
             return res.status(HttpStatus.OK).json({
@@ -69,6 +69,18 @@ export class RolesController {
             return res.status(HttpStatus.OK).json({
                 message: 'Role updated successfully',
                 data,
+            });
+        } catch (e) {
+            throw new BadRequestException(e.message);
+        }
+    }
+
+    @Delete('/:id/delete')
+    async deleteRole(@Param('id', ParseIntPipe) id: number, @Res() res: Response) {
+        try {
+            const data = await this.roleService.deleteRole(id);
+            return res.status(HttpStatus.OK).json({
+                message: 'Role deleted successfully',
             });
         } catch (e) {
             throw new BadRequestException(e.message);

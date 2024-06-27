@@ -52,4 +52,12 @@ export class RolesService {
         });
         return this.roleRepository.save(role);
     }
+
+    public async deleteRole(id: number){ 
+        const role = await this.roleRepository.findOne({ where: { id } });
+        if (!role) {
+            throw new NotFoundException('Role not found. Check the ID and try again');
+        }
+        return this.roleRepository.remove(role);
+    }
 }
