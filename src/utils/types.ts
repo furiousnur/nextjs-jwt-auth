@@ -33,3 +33,8 @@ export type RoleParams = {
     name: string;
     status?: string;
 }
+
+export type PermissionParams = { 
+    name: string;
+    status?: string;
+}

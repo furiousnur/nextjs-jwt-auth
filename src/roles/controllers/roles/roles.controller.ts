@@ -8,14 +8,15 @@ import {
     ParseIntPipe,
     Post,
     Put,
-    Res
+    Res, UseGuards
 } from '@nestjs/common'; 
 import {RolesService} from "../../services/roles/roles.service";
 import {Response} from "express";
 import {RoleDto} from "../../dtos/role.dto";
-import {UserProfileDto} from "../../../users/dtos/userProfile.dto"; 
+import {JwtAuthGuards} from "../../../auth/guards/jwt.guards"; 
 
 @Controller('roles')
+@UseGuards(JwtAuthGuards)
 export class RolesController {
     constructor(private readonly roleService: RolesService) {}
 
