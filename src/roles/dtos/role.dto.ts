@@ -1,10 +1,14 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsString, IsArray } from 'class-validator';
 
-export class RoleDto { 
+export class RoleDto {
     @IsNotEmpty()
     @IsString()
-    name: string; 
+    name: string;
 
     @IsString()
     status?: string;
+
+    @IsArray()
+    @IsNotEmpty()
+    permissions: number[];
 }

@@ -15,6 +15,7 @@ import {Permission} from "../typeorm/entities/Permission";
     TypeOrmModule.forFeature([Permission]),
   ],
   controllers: [PermissionsController],
-  providers: [PermissionsService]
+  providers: [PermissionsService],
+  exports: [PermissionsService],
 })
 export class PermissionsModule {}

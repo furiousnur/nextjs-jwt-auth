@@ -3,11 +3,13 @@ import {InjectRepository} from "@nestjs/typeorm";
 import {Role} from "../../../typeorm/entities/Role";
 import {Repository} from "typeorm";
 import {RoleParams} from "../../../utils/types";
+import {RolePermission} from "../../../typeorm/entities/RolePermission";
 
 @Injectable()
 export class RolesService {
     constructor(
-        @InjectRepository(Role) private roleRepository: Repository<Role>
+        @InjectRepository(Role) private roleRepository: Repository<Role>,
+        @InjectRepository(RolePermission) private rolePermissionRepository: Repository<RolePermission>,
     ) {}
 
     public async getRole(){
@@ -20,11 +22,18 @@ export class RolesService {
 
     public async createRole(RoleDetails: RoleParams){
         try {
-            const newRole = this.roleRepository.create({
-                ...RoleDetails,
-                createdAt: new Date(),
+            const role = this.roleRepository.create({ 
+                name: RoleDetails.name,
+                status: RoleDetails.status,
+                createdAt: new Date() 
             });
-            return this.roleRepository.save(newRole);
+            await this.roleRepository.save(role);
+            const rolePermissions = RoleDetails.permissions.map(permissionId => ({
+                roleId: role.id,
+                permissionId,
+            }));
+            await this.rolePermissionRepository.save(rolePermissions);
+            return role;
         } catch (e) {
             throw new BadRequestException(e.message);
         }
@@ -32,7 +41,8 @@ export class RolesService {
     
     public async findRole(id: number){
         const role = await this.roleRepository.findOne({
-            where: { id }
+            where: { id },
+            relations: ['permissions'],
         });
         if (!role) {
             throw new NotFoundException('Role not found');

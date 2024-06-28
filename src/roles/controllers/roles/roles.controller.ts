@@ -13,20 +13,26 @@ import {
 import {RolesService} from "../../services/roles/roles.service";
 import {Response} from "express";
 import {RoleDto} from "../../dtos/role.dto";
-import {JwtAuthGuards} from "../../../auth/guards/jwt.guards"; 
+import {JwtAuthGuards} from "../../../auth/guards/jwt.guards";
+import {PermissionsService} from "../../../permissions/services/permissions/permissions.service"; 
 
 @Controller('roles')
 @UseGuards(JwtAuthGuards)
 export class RolesController {
-    constructor(private readonly roleService: RolesService) {}
+    constructor(
+        private readonly roleService: RolesService,
+        private readonly permissionService: PermissionsService
+    ) {}
 
     @Get('/list')
     async getRole(@Res() res: Response){
         try {
             const data = await this.roleService.getRole();
+            const permissions = await this.permissionService.getPermission();
             return res.status(HttpStatus.OK).json({
                 message: 'Role fetched successfully',
                 data,
+                permissions
             });
         } catch (e) {
             throw new BadRequestException(e.message);

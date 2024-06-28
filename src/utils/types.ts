@@ -32,6 +32,7 @@ export type LeaveParams = {
 export type RoleParams = { 
     name: string;
     status?: string;
+    permissions?: number[];
 }
 
 export type PermissionParams = { 
