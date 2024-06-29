@@ -2,7 +2,7 @@ import {BadRequestException, Injectable, NotFoundException} from '@nestjs/common
 import {InjectRepository} from "@nestjs/typeorm";
 import {Repository} from "typeorm";
 import {Attendance} from "../../../typeorm/entities/Attendance";
-import {AttendanceParams} from "../../../utils/types";
+import {AttendanceParams, RoleParams} from "../../../utils/types";
 
 @Injectable()
 export class AttendanceService {
@@ -28,5 +28,36 @@ export class AttendanceService {
         } catch (e) {
             throw new BadRequestException(e.message);
         }
+    }
+
+    public async findAttendance(id: number){
+        const role = await this.attendanceRepository.findOne({
+            where: { id }
+        });
+        if (!role) {
+            throw new NotFoundException('Attendance not found');
+        }
+        return role;
+    }
+
+    public async updateAttendance(id: number, AttendanceDetails: AttendanceParams) {
+        const attendance = await this.attendanceRepository.findOne({ where: { id } });
+        if (!attendance) {
+            throw new NotFoundException('Attendance not found. Check the ID and try again');
+        } 
+        Object.assign(attendance, {
+            ...AttendanceDetails,
+            updatedAt: new Date(),
+        }); 
+        await this.attendanceRepository.save(attendance);
+        return attendance;
+    }
+    
+    public async deleteAttendance(id: number){
+        const role = await this.attendanceRepository.findOne({ where: { id } });
+        if (!role) {
+            throw new NotFoundException('Attendance not found. Check the ID and try again');
+        } 
+        return this.attendanceRepository.remove(role);
     }
 }
