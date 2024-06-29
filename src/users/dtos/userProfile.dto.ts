@@ -3,10 +3,6 @@ import { IsNotEmpty, IsString } from 'class-validator';
 export class UserProfileDto {
     @IsNotEmpty()
     @IsString()
-    userId: number;
-
-    @IsNotEmpty()
-    @IsString()
     name: string;
 
     @IsNotEmpty()
@@ -19,11 +15,7 @@ export class UserProfileDto {
     
     @IsNotEmpty()
     @IsString()
-    department: string;
-    
-    @IsNotEmpty()
-    @IsString()
-    status: string;
+    department: string; 
 
     @IsString()
     profile_pic?: string;

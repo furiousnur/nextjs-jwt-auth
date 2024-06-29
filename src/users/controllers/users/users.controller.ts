@@ -77,4 +77,21 @@ export class UsersController {
             throw new BadRequestException(e.message);
         }
     }
+
+    @Get('/:status/:id')
+    async userUpdatedByStatus(
+        @Param('status') status: string,
+        @Param('id', ParseIntPipe) id: number,
+        @Res() res: Response
+    ) {
+        try {
+            const data = await this.usersService.acceptOrReject(status,id);
+            return res.status(HttpStatus.OK).json({
+                message: 'Status updated successfully',
+                data,
+            });
+        } catch (e) {
+            throw new BadRequestException(e.message);
+        }
+    }
 }

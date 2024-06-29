@@ -106,4 +106,21 @@ export class UsersService {
             throw new BadRequestException(e.message);
         }
     }
+
+    public async acceptOrReject(status: string,id: number){
+        try {
+            const user = await this.authRepository.findOne({ where: { id } });
+            if (!user) {
+                throw new NotFoundException('User not found');
+            }
+            const profile = await this.userProfileRepository.findOne({ where: { userId:user.id } });
+            return await this.userProfileRepository.save({ 
+                ...profile,
+                status: status,
+                updatedAt: new Date(),
+            });
+        } catch (e) {
+            throw new BadRequestException(e.message);
+        }
+    }
 }
