@@ -6,13 +6,14 @@ import {PassportModule} from "@nestjs/passport";
 import {JwtModule} from "@nestjs/jwt";
 import {TypeOrmModule} from "@nestjs/typeorm"; 
 import {Permission} from "../typeorm/entities/Permission";
+import {RolePermission} from "../typeorm/entities/RolePermission";
 
 @Module({
   imports: [
     AuthModule,
     PassportModule,
     JwtModule,
-    TypeOrmModule.forFeature([Permission]),
+    TypeOrmModule.forFeature([Permission,RolePermission]),
   ],
   controllers: [PermissionsController],
   providers: [PermissionsService],

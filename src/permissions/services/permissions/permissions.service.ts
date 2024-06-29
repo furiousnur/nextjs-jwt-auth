@@ -3,11 +3,13 @@ import {InjectRepository} from "@nestjs/typeorm";
 import {Permission} from "../../../typeorm/entities/Permission";
 import {Repository} from "typeorm";
 import {PermissionParams} from "../../../utils/types";
+import {RolePermission} from "../../../typeorm/entities/RolePermission";
 
 @Injectable()
 export class PermissionsService {
     constructor(
-        @InjectRepository(Permission) private permissionRepository: Repository<Permission>
+        @InjectRepository(Permission) private permissionRepository: Repository<Permission>,
+        @InjectRepository(RolePermission) private rolePermissionRepository: Repository<RolePermission>,
     ) {}
 
     public async getPermission(){
@@ -58,6 +60,7 @@ export class PermissionsService {
         if (!permission) {
             throw new NotFoundException('Permission not found. Check the ID and try again');
         }
+        await this.rolePermissionRepository.delete({ permissionId: id });
         return this.permissionRepository.remove(permission);
     }
 }

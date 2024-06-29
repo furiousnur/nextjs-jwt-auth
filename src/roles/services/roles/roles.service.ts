@@ -49,18 +49,23 @@ export class RolesService {
         }
         return role;
     }
-    
-    public async updateRole(id: number, RoleDetails: RoleParams){
+
+    public async updateRole(id: number, RoleDetails: RoleParams) { 
         const role = await this.roleRepository.findOne({ where: { id } });
         if (!role) {
             throw new NotFoundException('Role not found. Check the ID and try again');
         }
-
-        Object.assign(role, {
-            ...RoleDetails,
-            updatedAt: new Date(),
-        });
-        return this.roleRepository.save(role);
+        role.name = RoleDetails.name;
+        role.status = RoleDetails.status;
+        role.updatedAt = new Date();
+        await this.roleRepository.save(role); 
+        await this.rolePermissionRepository.delete({ roleId: id });
+        const rolePermissions = RoleDetails.permissions.map(permissionId => ({
+            roleId: id,
+            permissionId,
+        }));
+        await this.rolePermissionRepository.save(rolePermissions);
+        return role;
     }
 
     public async deleteRole(id: number){ 
@@ -68,6 +73,7 @@ export class RolesService {
         if (!role) {
             throw new NotFoundException('Role not found. Check the ID and try again');
         }
+        await this.rolePermissionRepository.delete({ roleId: id });
         return this.roleRepository.remove(role);
     }
 }
