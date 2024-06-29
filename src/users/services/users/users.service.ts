@@ -5,17 +5,22 @@ import {CreateUserParams, UserProfileParams} from '../../../utils/types';
 import { User } from '../../../typeorm/entities/User';
 import { Profile } from '../../../typeorm/entities/Profile';
 import * as bcrypt from "bcrypt";
+import {Role} from "../../../typeorm/entities/Role";
+import {UserRole} from "../../../typeorm/entities/UserRole";
 
 @Injectable()
 export class UsersService {
     constructor(
         @InjectRepository(User) private readonly authRepository: Repository<User>,
         @InjectRepository(Profile) private readonly userProfileRepository: Repository<Profile>,
+        @InjectRepository(Role) private readonly roleRepository: Repository<Role>,
+        @InjectRepository(UserRole) private readonly userRoleRepository: Repository<UserRole>,
     ) {}
 
     public async getUser(page: number = 1, limit: number = 10) {
+        const roles = await this.roleRepository.find();
         const [users, total] = await this.authRepository.findAndCount({
-            relations: ['profile'],
+            relations: ['profile', 'userRole', 'userRole.role'],
             take: limit,
             skip: (page - 1) * limit,
         });
@@ -30,6 +35,7 @@ export class UsersService {
             page,
             totalPages,
             limit,
+            roles
         };
     }
 
@@ -123,4 +129,33 @@ export class UsersService {
             throw new BadRequestException(e.message);
         }
     }
+
+    public async setUserRole(userId: number, roleId: number) {
+        try {
+            const user = await this.authRepository.findOne({ where: { id: userId } });
+            if (!user) {
+                throw new NotFoundException('User not found');
+            }
+
+            const role = await this.roleRepository.findOne({ where: { id: roleId } });
+            if (!role) {
+                throw new NotFoundException('Role not found');
+            }
+            const existingUserRole = await this.userRoleRepository.findOne({
+                where: { user: { id: user.id } },
+                relations: ['user'],
+            });
+            if (existingUserRole) { 
+                await this.userRoleRepository.delete(existingUserRole);
+            }
+            const newUserRole = await this.userRoleRepository.create({
+                user: { id: userId },
+                role: { id: roleId },
+            });
+            return await this.userRoleRepository.save(newUserRole);
+        } catch (e) {
+            throw new BadRequestException(e.message);
+        }
+    }
+
 }

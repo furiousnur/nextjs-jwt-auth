@@ -94,4 +94,21 @@ export class UsersController {
             throw new BadRequestException(e.message);
         }
     }
+
+    @Get('/roleSet/:userId/:roleId')
+    async setUserRole( 
+        @Param('userId', ParseIntPipe) userId: number,
+        @Param('roleId', ParseIntPipe) roleId: number,
+        @Res() res: Response
+    ) {
+        try {
+            const data = await this.usersService.setUserRole(userId,roleId);
+            return res.status(HttpStatus.OK).json({
+                message: 'Role Set successfully',
+                data,
+            });
+        } catch (e) {
+            throw new BadRequestException(e.message);
+        }
+    }
 }

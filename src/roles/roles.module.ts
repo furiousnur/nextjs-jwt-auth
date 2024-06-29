@@ -18,6 +18,7 @@ import {RolePermission} from "../typeorm/entities/RolePermission";
       PermissionsModule
   ],
   controllers: [RolesController],
-  providers: [RolesService]
+  providers: [RolesService],
+  exports: [RolesService, TypeOrmModule.forFeature([Role])]
 })
 export class RolesModule {}

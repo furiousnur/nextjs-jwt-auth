@@ -15,6 +15,7 @@ import {Role} from "./typeorm/entities/Role";
 import {PermissionsModule} from "./permissions/permissions.module";
 import {Permission} from "./typeorm/entities/Permission";
 import {RolePermission} from "./typeorm/entities/RolePermission";
+import {UserRole} from "./typeorm/entities/UserRole";
 
 @Module({
   imports: [TypeOrmModule.forRoot({
@@ -24,7 +25,7 @@ import {RolePermission} from "./typeorm/entities/RolePermission";
     username:'root',
     password:'',
     database:'nestjs_jwt',
-    entities:[User, Attendance, Profile, Leave, Role, Permission, RolePermission],
+    entities:[User, Attendance, Profile, Leave, Role, Permission, RolePermission, UserRole],
     synchronize:true
   }),AuthModule, AttendanceModule, UsersModule, LeavesModule, RolesModule, PermissionsModule],
   controllers: [AppController],

@@ -7,13 +7,17 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersService } from './services/users/users.service';
 import { User } from '../typeorm/entities/User';
 import { Profile } from '../typeorm/entities/Profile';
+import {UserRole} from "../typeorm/entities/UserRole";
+import {RolesModule} from "../roles/roles.module";
+import {Role} from "../typeorm/entities/Role";
 
 @Module({
   imports: [
     AuthModule,
     PassportModule,
     JwtModule,
-    TypeOrmModule.forFeature([User, Profile]),
+    TypeOrmModule.forFeature([User, Profile, UserRole, Role]),
+    RolesModule
   ],
   controllers: [UsersController],
   providers: [UsersService],
