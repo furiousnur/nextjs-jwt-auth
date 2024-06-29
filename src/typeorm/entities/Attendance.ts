@@ -20,7 +20,7 @@ export class Attendance {
     @Column()
     time_out: string;
 
-    @Column({ default: 'pending' })
+    @Column({ default: 'Pending' })
     status: string;
 
     @Column({ nullable: true })

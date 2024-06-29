@@ -47,6 +47,7 @@ export class AttendanceService {
         } 
         Object.assign(attendance, {
             ...AttendanceDetails,
+            status: 'Pending',
             updatedAt: new Date(),
         }); 
         await this.attendanceRepository.save(attendance);
@@ -59,5 +60,21 @@ export class AttendanceService {
             throw new NotFoundException('Attendance not found. Check the ID and try again');
         } 
         return this.attendanceRepository.remove(role);
+    }
+
+    public async acceptOrReject(status: string,id: number){
+        try {
+            const attendance = await this.attendanceRepository.findOne({ where: { id } });
+            if (!attendance) {
+                throw new NotFoundException('Attendance not found');
+            }
+            return await this.attendanceRepository.save({
+                ...attendance,
+                status: status,
+                updatedAt: new Date(),
+            });
+        } catch (e) {
+            throw new BadRequestException(e.message);
+        }
     }
 }

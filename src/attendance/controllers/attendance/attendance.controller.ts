@@ -88,4 +88,21 @@ export class AttendanceController {
             throw new BadRequestException(e.message);
         }
     }
+
+    @Get('/:status/:id')
+    async getAttendanceByStatus(
+        @Param('status') status: string,
+        @Param('id', ParseIntPipe) id: number,
+        @Res() res: Response
+    ) {
+        try {
+            const data = await this.attendanceService.acceptOrReject(status,id);
+            return res.status(HttpStatus.OK).json({
+                message: 'Status updated successfully',
+                data,
+            });
+        } catch (e) {
+            throw new BadRequestException(e.message);
+        }
+    }
 }
