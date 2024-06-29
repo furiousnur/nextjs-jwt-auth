@@ -1,9 +1,10 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserProfileParams } from '../../../utils/types';
+import {CreateUserParams, UserProfileParams} from '../../../utils/types';
 import { User } from '../../../typeorm/entities/User';
 import { Profile } from '../../../typeorm/entities/Profile';
+import * as bcrypt from "bcrypt";
 
 @Injectable()
 export class UsersService {
@@ -31,7 +32,33 @@ export class UsersService {
             limit,
         };
     }
-    
+
+    public async createUser(CreateUserDetails: CreateUserParams){
+        try {
+            const salt = await bcrypt.genSalt();
+            const hashedPassword = await bcrypt.hash(CreateUserDetails.password, salt);
+            const user = this.authRepository.create({
+                username: CreateUserDetails.username,
+                password: hashedPassword,
+                createdAt: new Date()
+            }); 
+            await this.authRepository.save(user); 
+            const profile = this.userProfileRepository.create({
+                userId: user.id,
+                name: CreateUserDetails.name,
+                dob: CreateUserDetails.dob,
+                position: CreateUserDetails.position,
+                department: CreateUserDetails.department,
+                profile_pic: CreateUserDetails.profile_pic ?? '',
+                createdAt: new Date(),
+            }); 
+            await this.userProfileRepository.save(profile);
+            return profile;
+        } catch (e) {
+            throw new BadRequestException(e.message);
+        }
+    }
+
     public async findUser(id: number) {
         const user = await this.authRepository.findOne({
             where: { id },

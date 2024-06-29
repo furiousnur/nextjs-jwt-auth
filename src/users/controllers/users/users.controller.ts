@@ -5,7 +5,7 @@ import {
     Get,
     HttpStatus,
     Param,
-    ParseIntPipe,
+    ParseIntPipe, Post,
     Put,
     Res,
     UseGuards
@@ -14,6 +14,8 @@ import { Response } from 'express';
 import { UsersService } from '../../services/users/users.service';
 import { UserProfileDto } from '../../dtos/userProfile.dto';
 import { JwtAuthGuards } from '../../../auth/guards/jwt.guards';
+import {RoleDto} from "../../../roles/dtos/role.dto";
+import {UserDto} from "../../dtos/user.dto";
 
 @Controller('users')
 @UseGuards(JwtAuthGuards)
@@ -26,6 +28,19 @@ export class UsersController {
             const data = await this.usersService.getUser();
             return res.status(HttpStatus.OK).json({
                 message: 'User fetched successfully',
+                data,
+            });
+        } catch (e) {
+            throw new BadRequestException(e.message);
+        }
+    }
+
+    @Post('/create')
+    async createRole(@Body() userDto:UserDto,@Res() res: Response){
+        try {
+            const data = await this.usersService.createUser(userDto);
+            return res.status(HttpStatus.OK).json({
+                message: 'User created successfully',
                 data,
             });
         } catch (e) {

@@ -20,6 +20,16 @@ export type UserProfileParams = {
     profile_pic?: string;
 }
 
+export type CreateUserParams = {
+    username: string;
+    password: string;
+    name: string;
+    dob: string;
+    position: string;
+    department: string;
+    profile_pic?: string;
+}
+
 export type LeaveParams = {
     userId: number;
     leave_type: string;
