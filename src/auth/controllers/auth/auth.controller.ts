@@ -1,4 +1,16 @@
-import {BadRequestException, Body, Controller, Get, HttpStatus, Post, Req, Res, UseGuards} from '@nestjs/common'; 
+import {
+    BadRequestException,
+    Body,
+    Controller,
+    Get,
+    HttpStatus,
+    Param,
+    ParseIntPipe,
+    Post,
+    Req,
+    Res,
+    UseGuards
+} from '@nestjs/common'; 
 import {Response, Request} from "express";
 import {AuthService} from "../../services/auth/auth.service";
 import {UserDto} from "../../dtos/user.dto";
@@ -40,12 +52,16 @@ export class AuthController {
         }
     }
     
-    @Get('verify-token')
+    @Get('verify-token/:userId')
     @UseGuards(JwtAuthGuards)
-    async verifyToken(@Req() req:Request){
-        try { 
-            return 'Success';
-        }catch (e){
+    async verifyToken(@Param('userId', ParseIntPipe) userId: number, @Req() req:Request, @Res() res: Response){
+        try {
+            const data = await this.authService.verifyToken(userId);
+            return res.status(HttpStatus.OK).json({
+                message: 'Success',
+                data,
+            });
+        } catch (e) {
             throw new BadRequestException(e.message);
         }
     }

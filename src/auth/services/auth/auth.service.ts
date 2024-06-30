@@ -32,7 +32,13 @@ export class AuthService {
         try {
             const user = await this.authRepository.findOne({ 
                 where: { username: loginDetails.username },
-                relations: ['profile'],
+                relations: [
+                    'profile',
+                    'userRole',
+                    'userRole.role',
+                    'userRole.role.permissions',
+                    'userRole.role.permissions.permission'
+                ],
             });
             if (!user) {
                 throw new BadRequestException('Invalid username or password');
@@ -49,4 +55,24 @@ export class AuthService {
             throw new BadRequestException(e.message);
         }
     } 
+    
+    public async verifyToken(userId: number){
+        try {
+            const user = await this.authRepository.findOne({
+                where: { id: userId },
+                select: ['id'],
+                relations: [
+                    'userRole.role',
+                    'userRole.role.permissions',
+                    'userRole.role.permissions.permission'
+                ],
+            });
+            if (!user) {
+                throw new BadRequestException('Invalid user id');
+            }
+            return user;
+        } catch (e) {
+            throw new BadRequestException(e.message);
+        }
+    }
 }

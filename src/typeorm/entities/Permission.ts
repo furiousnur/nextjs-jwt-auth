@@ -1,11 +1,12 @@
-import { Column, Entity, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm'; 
+import {Column, Entity, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToMany} from 'typeorm';
+import {RolePermission} from "./RolePermission"; 
 
 @Entity({ name: 'permissions' })
 export class Permission {
     @PrimaryGeneratedColumn()
     id: number; 
 
-    @Column()
+    @Column({ unique: true})
     name: string; 
     
     @Column({ default: 'web' })
@@ -18,5 +19,8 @@ export class Permission {
     createdAt: Date;
 
     @UpdateDateColumn({ nullable: true })
-    updatedAt: Date; 
+    updatedAt: Date;
+
+    @OneToMany(() => RolePermission, rolePermission => rolePermission.permission)
+    rolePermissions: RolePermission[];
 }
