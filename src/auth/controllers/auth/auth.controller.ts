@@ -54,7 +54,10 @@ export class AuthController {
     
     @Get('verify-token/:userId')
     @UseGuards(JwtAuthGuards)
-    async verifyToken(@Param('userId', ParseIntPipe) userId: number, @Req() req:Request, @Res() res: Response){
+    async verifyToken(
+        @Param('userId', ParseIntPipe) userId: number,
+        @Req() req:Request, @Res() res: Response
+    ){
         try {
             const data = await this.authService.verifyToken(userId);
             return res.status(HttpStatus.OK).json({

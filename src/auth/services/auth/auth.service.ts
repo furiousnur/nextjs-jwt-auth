@@ -5,11 +5,17 @@ import {Repository} from "typeorm";
 import {UserParams} from "../../../utils/types";
 import * as bcrypt from 'bcrypt';
 import {JwtService} from "@nestjs/jwt";
+import {RolePermission} from "../../../typeorm/entities/RolePermission";
+import {Permission} from "../../../typeorm/entities/Permission";
+import {UserRole} from "../../../typeorm/entities/UserRole";
 
 @Injectable()
 export class AuthService {
     constructor(
         @InjectRepository(User) private authRepository: Repository<User>,
+        @InjectRepository(RolePermission) private rolePermissionRepository: Repository<RolePermission>,
+        @InjectRepository(Permission) private permissionRepository: Repository<Permission>,
+        @InjectRepository(UserRole) private readonly userRoleRepository: Repository<UserRole>,
         private jwtService: JwtService,
     ) {}
 
@@ -70,6 +76,17 @@ export class AuthService {
             if (!user) {
                 throw new BadRequestException('Invalid user id');
             }
+
+            /*const permission = await this.permissionRepository.findOne({
+                where: { name: permissionName },
+            });
+            console.log('permission', permission);
+            if (!permission) {
+                throw new BadRequestException('Permission not found');
+            }
+            user['hasPermission'] = user.userRole.role.permissions.some(
+                (rolePermission) => rolePermission.permission.name === permissionName,
+            );*/
             return user;
         } catch (e) {
             throw new BadRequestException(e.message);
