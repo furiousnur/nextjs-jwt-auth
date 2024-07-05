@@ -4,6 +4,7 @@ import { User } from '../../../typeorm/entities/User';
 import { Repository } from 'typeorm';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { LeaveBalance } from '../../../typeorm/entities/LeaveBalance';
+import {LoggerService} from "../../../logger/services/logger/logger.service";
 
 @Injectable()
 export class LeaveBalanceService {
@@ -12,11 +13,12 @@ export class LeaveBalanceService {
         private readonly leaveBalanceRepository: Repository<LeaveBalance>,
         @InjectRepository(User)
         private readonly userRepository: Repository<User>,
+        private readonly logger: LoggerService
     ) {}
 
     @Cron(CronExpression.EVERY_1ST_DAY_OF_MONTH_AT_MIDNIGHT)
     async handleCron() {
-        console.log('Running cron job on the 1st day of every month at midnight');
+        this.logger.log('Running cron job on the 1st day of every month at midnight');
         try {
             const users = await this.userRepository.find({ relations: ['leaveBalances'] });
             for (const user of users) {
@@ -40,10 +42,10 @@ export class LeaveBalanceService {
                 }
                 await this.leaveBalanceRepository.save(leaveBalance);
             }
-            console.log('Leave balances updated for all users');
-        } catch (e) {
-            console.error('Error updating leave balances:', e.message);
-            throw new BadRequestException(e.message);
+            this.logger.log('Leave balances updated for all users');
+        } catch (error) {
+            this.logger.error(`Error updating leave balance: ${error.message}`);
+            throw new BadRequestException(error.message);
         }
     }
 }

@@ -18,6 +18,7 @@ import {RolePermission} from "./typeorm/entities/RolePermission";
 import {UserRole} from "./typeorm/entities/UserRole";
 import { LeaveBalanceModule } from './leave-balance/leave-balance.module';
 import {LeaveBalance} from "./typeorm/entities/LeaveBalance";
+import { LoggerModule } from './logger/logger.module';
 
 @Module({
   imports: [TypeOrmModule.forRoot({
@@ -29,7 +30,7 @@ import {LeaveBalance} from "./typeorm/entities/LeaveBalance";
     database:'nestjs_jwt',
     entities:[User, Attendance, Profile, Leave, Role, Permission, RolePermission, UserRole, LeaveBalance],
     synchronize:true
-  }),AuthModule, AttendanceModule, UsersModule, LeavesModule, RolesModule, PermissionsModule, LeaveBalanceModule],
+  }),AuthModule, AttendanceModule, UsersModule, LeavesModule, RolesModule, PermissionsModule, LeaveBalanceModule, LoggerModule],
   controllers: [AppController],
   providers: [AppService],
 })
