@@ -8,13 +8,14 @@ import {TypeOrmModule} from "@nestjs/typeorm";
 import {Leave} from "../typeorm/entities/Leave";
 
 @Module({
-  imports: [
-    AuthModule,
-    PassportModule,
-    JwtModule,
-    TypeOrmModule.forFeature([Leave]),
-  ],
-  controllers: [LeavesController],
-  providers: [LeavesService]
+    imports: [
+      AuthModule,
+      PassportModule,
+      JwtModule,
+      TypeOrmModule.forFeature([Leave]),
+    ],
+    controllers: [LeavesController],
+    providers: [LeavesService],
+    exports: [LeavesService]
 })
 export class LeavesModule {}
