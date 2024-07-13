@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {BadRequestException, Injectable, NotFoundException} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../../../typeorm/entities/User';
 import { Repository } from 'typeorm';
@@ -46,6 +46,21 @@ export class LeaveBalanceService {
         } catch (error) {
             this.logger.error(`Error updating leave balance: ${error.message}`);
             throw new BadRequestException(error.message);
+        }
+    }
+
+    public async getLeaveBalance() {
+        try{
+            const [leaves] = await this.leaveBalanceRepository.findAndCount({
+                relations: ['user'],
+            });
+
+            if (!leaves.length) {
+                throw new NotFoundException('No leave Balance found');
+            }
+            return leaves;
+        } catch (e) {
+            throw new BadRequestException(e.message);
         }
     }
 }

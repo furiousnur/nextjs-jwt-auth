@@ -24,7 +24,6 @@ export class UsersService {
             take: limit,
             skip: (page - 1) * limit,
         });
-
         if (!users.length) {
             throw new NotFoundException('No user found');
         }
@@ -38,7 +37,6 @@ export class UsersService {
             roles
         };
     }
-
     public async createUser(CreateUserDetails: CreateUserParams){
         try {
             const salt = await bcrypt.genSalt();
@@ -64,7 +62,6 @@ export class UsersService {
             throw new BadRequestException(e.message);
         }
     }
-
     public async findUser(id: number) {
         const user = await this.authRepository.findOne({
             where: { id },
@@ -75,7 +72,6 @@ export class UsersService {
         }
         return user;
     }
-
     public async updateUser(id: number, userDetails: UserProfileParams) {
         const user = await this.authRepository.findOne({ where: { id }, relations: ['profile'] });
         if (!user) {
@@ -112,7 +108,6 @@ export class UsersService {
             throw new BadRequestException(e.message);
         }
     }
-
     public async acceptOrReject(status: string,id: number){
         try {
             const user = await this.authRepository.findOne({ where: { id } });
@@ -129,7 +124,6 @@ export class UsersService {
             throw new BadRequestException(e.message);
         }
     }
-
     public async setUserRole(userId: number, roleId: number) {
         try {
             const user = await this.authRepository.findOne({ where: { id: userId } });
@@ -157,5 +151,4 @@ export class UsersService {
             throw new BadRequestException(e.message);
         }
     }
-
 }

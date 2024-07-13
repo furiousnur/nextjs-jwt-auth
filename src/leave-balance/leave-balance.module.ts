@@ -6,6 +6,7 @@ import {User} from "../typeorm/entities/User";
 import {LeaveBalance} from "../typeorm/entities/LeaveBalance";
 import {Leave} from "../typeorm/entities/Leave";
 import {LoggerModule} from "../logger/logger.module";
+import { LeaveBalanceController } from './controllers/leave-balance/leave-balance.controller';
 
 @Module({
   imports: [
@@ -13,7 +14,7 @@ import {LoggerModule} from "../logger/logger.module";
       TypeOrmModule.forFeature([LeaveBalance, User, Leave]),
       LoggerModule
   ],
-  controllers: [],
+  controllers: [LeaveBalanceController],
   providers: [LeaveBalanceService]
 })
 export class LeaveBalanceModule {}
